@@ -8,18 +8,18 @@ This dockerfile provides a base Glassfish v2ur2 image with the following feature
 
 ## How to configure
 If you need to further configure the app server follow these steps:
-* Create a folder named i.e. `config`
+* Create a folder on named i.e. `config`
 * Inside this folder add `.sh` files which can use `/bin/sh` and will be run in sequence, i.e. `1.sh`, `2.sh`  
   * Either extend the image
 ```
 FROM lamole73/glassfish-v2ur2
 ADD config /docker-entrypoint.d
 ```
-  * Or add config folder as a volume, i.e.
+  * Or add config folder (assuming is on /tmp) as a volume, i.e.
 ```
 docker run -d -p 8080:8080 -p 4848:4848 \
   --name glassfish \
-  --mount source=./config,target=/docker-entrypoint.d \
+  --mount type=bind,source=/tmp/config,target=/docker-entrypoint.d \
   lamole73/glassfish-v2ur2
 ```
 
@@ -31,7 +31,7 @@ docker run -d -p 8080:8080 -p 4848:4848 --name glassfish lamole73/glassfish-v2ur
 
 If you want to also run initialization scripts prior to application server start then add them as a volume with target /docker-entrypoint.d. For example if your scripts are on ./config folder execute the following:
 ```
-docker run -d -p 8080:8080 -p 4848:4848 --name glassfish --mount source=./config,target=/docker-entrypoint.d lamole73/glassfish-v2ur2
+docker run -d -p 8080:8080 -p 4848:4848 --name glassfish --mount type=bind,source=/tmp/config,target=/docker-entrypoint.d lamole73/glassfish-v2ur2
 ```
 
 ## How to build
